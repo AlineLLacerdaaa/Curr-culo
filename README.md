@@ -2,7 +2,9 @@
 
 Currículo em quatro idiomas, em um único arquivo HTML (sem dependências), pronto para abrir no navegador ou exportar para PDF com **Ctrl+P**.
 
-**Ver online:** https://alinellacerdaaa.github.io/Curr-culo/
+**Ver online:**
+- Vercel: https://curriculo-gustavo-lacerda.vercel.app
+- GitHub Pages: https://alinellacerdaaa.github.io/Curr-culo/
 
 | Idioma | Online | PDF |
 |---|---|---|
