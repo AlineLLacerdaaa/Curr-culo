@@ -2,14 +2,14 @@
 
 Currículo em quatro idiomas, em um único arquivo HTML (sem dependências), pronto para abrir no navegador ou exportar para PDF com **Ctrl+P**.
 
-**Ver online:** https://alinellacerdaaa.github.io/curriculo/
+**Ver online:** https://alinellacerdaaa.github.io/Curr-culo/
 
 | Idioma | Online | PDF |
 |---|---|---|
-| 🇧🇷 Português | [Abrir](https://alinellacerdaaa.github.io/curriculo/#pt) | [Baixar](pdf/Curriculo-Gustavo-Lacerda-Lima-PT.pdf) |
-| 🇬🇧 English | [Open](https://alinellacerdaaa.github.io/curriculo/#en) | [Download](pdf/Curriculo-Gustavo-Lacerda-Lima-EN.pdf) |
-| 🇷🇺 Русский | [Открыть](https://alinellacerdaaa.github.io/curriculo/#ru) | [Скачать](pdf/Curriculo-Gustavo-Lacerda-Lima-RU.pdf) |
-| 🇨🇳 中文 | [打开](https://alinellacerdaaa.github.io/curriculo/#zh) | [下载](pdf/Curriculo-Gustavo-Lacerda-Lima-ZH.pdf) |
+| 🇧🇷 Português | [Abrir](https://alinellacerdaaa.github.io/Curr-culo/#pt) | [Baixar](pdf/Curriculo-Gustavo-Lacerda-Lima-PT.pdf) |
+| 🇬🇧 English | [Open](https://alinellacerdaaa.github.io/Curr-culo/#en) | [Download](pdf/Curriculo-Gustavo-Lacerda-Lima-EN.pdf) |
+| 🇷🇺 Русский | [Открыть](https://alinellacerdaaa.github.io/Curr-culo/#ru) | [Скачать](pdf/Curriculo-Gustavo-Lacerda-Lima-RU.pdf) |
+| 🇨🇳 中文 | [打开](https://alinellacerdaaa.github.io/Curr-culo/#zh) | [下载](pdf/Curriculo-Gustavo-Lacerda-Lima-ZH.pdf) |
 
 ## Contato
 
