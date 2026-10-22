@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gustavo Lacerda Lima — Assistente Administrativo</title>
+<style>
+  /* =========================================================
+     VARIÁVEIS — cores, fontes e espaçamentos
+     ========================================================= */
+  :root {
+    --navy: #1F3A5F;          /* cor principal */
+    --accent: #2E7D9A;        /* acento discreto */
+    --text: #33393F;          /* cinza-grafite */
+    --muted: #59636E;
+    --line: #C9D6E0;
+    --side-bg: #E8F0F5;       /* fundo da coluna lateral */
+    --paper: #FFFFFF;
+    --page-bg: #E6EAEE;
+
+    --font: "Inter", "Segoe UI", Roboto, Helvetica, Arial;
+    --font-cjk: "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", "Noto Sans SC";
+
+    --sheet-pad: 12mm;
+    --gap: 6mm;
+    --side-w: 31%;
+  }
+
+  /* =========================================================
+     BASE
+     ========================================================= */
+  * { box-sizing: border-box; }
+  html { scroll-padding-top: 72px; }
+  body {
+    margin: 0;
+    background: var(--page-bg);
+    color: var(--text);
+    font-family: var(--font), sans-serif;
+    font-size: 9.6pt;
+    line-height: 1.36;
+  }
+  :lang(zh) { font-family: var(--font), var(--font-cjk), sans-serif; }
+  h1, h2, h3, p, ul { margin: 0; }
+  ul { padding: 0; list-style: none; }
+  a { color: inherit; text-decoration: none; }
+
+  /* =========================================================
+     SELETOR DE IDIOMA (apenas na tela)
+     ========================================================= */
+  .lang-nav {
+    position: sticky; top: 0; z-index: 10;
+    display: flex; flex-wrap: wrap; justify-content: center; align-items: center;
+    gap: 8px; padding: 12px 16px;
+    background: var(--paper);
+    border-bottom: 1px solid var(--line);
+    box-shadow: 0 2px 8px rgba(31, 58, 95, .08);
+  }
+  .lang-nav a {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 6px 14px;
+    border: 1px solid var(--line); border-radius: 999px;
+    color: var(--navy); font-weight: 600; font-size: 14px;
+  }
+  .lang-nav a:hover { border-color: var(--navy); }
+  .lang-nav .hint { margin-left: 8px; color: var(--muted); font-size: 12px; }
+
+  .flag {
+    width: 24px; height: 16px; flex: none;
+    border-radius: 2px;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, .15);
+  }
+
+  /* Idioma ativo (padrão: português) */
+  body:not(:has(.cv:target)) .lang-nav a[href="#pt"],
+  body:has(#pt:target) .lang-nav a[href="#pt"],
+  body:has(#en:target) .lang-nav a[href="#en"],
+  body:has(#ru:target) .lang-nav a[href="#ru"],
+  body:has(#zh:target) .lang-nav a[href="#zh"] {
+    background: var(--navy); border-color: var(--navy); color: #fff;
+  }
+
+  /* =========================================================
+     EXIBIÇÃO DAS VERSÕES (uma por vez, sem JavaScript)
+     ========================================================= */
+  .cv { display: none; }
+  .cv:target,
+  body:not(:has(.cv:target)) #pt { display: block; }
+  @supports not selector(:has(*)) { #pt { display: block; } }
+
+  .lang-tag {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    margin: 20px 0 10px;
+    color: var(--muted); font-size: 13px;
+  }
+
+  /* =========================================================
+     FOLHA A4
+     ========================================================= */
+  .sheet {
+    width: 210mm; min-height: 297mm;
+    margin: 0 auto 32px;
+    padding: var(--sheet-pad);
+    background: var(--paper);
+    box-shadow: 0 6px 24px rgba(31, 58, 95, .14);
+  }
+
+  /* =========================================================
+     CABEÇALHO — nome, cargo e contatos
+     ========================================================= */
+  .cv-header { margin-bottom: 5mm; }
+  .cv-header h1 {
+    color: var(--navy);
+    font-size: 30px; font-weight: 800; line-height: 1.1;
+    letter-spacing: .5px; text-transform: uppercase;
+  }
+  .role {
+    margin-top: 4px;
+    color: var(--accent);
+    font-size: 15px; font-weight: 600;
+    letter-spacing: .3em; text-transform: uppercase;
+  }
+  :lang(zh) .role, :lang(zh) .cv-header h1 { letter-spacing: .08em; }
+
+  .contact {
+    display: flex; flex-wrap: wrap; gap: 4px 22px;
+    margin-top: 3.2mm; padding: 1.8mm 0;
+    border-top: 1.5px solid var(--navy);
+    border-bottom: 1.5px solid var(--navy);
+    font-size: 9.5pt;
+  }
+  .contact li { display: flex; align-items: center; gap: 7px; }
+  .ico {
+    display: inline-grid; place-items: center;
+    width: 17px; height: 17px; flex: none;
+    background: var(--navy); border-radius: 2px;
+  }
+  .ico svg {
+    width: 11px; height: 11px;
+    fill: none; stroke: #fff; stroke-width: 2.2;
+    stroke-linecap: round; stroke-linejoin: round;
+  }
+  .ico.wa { background: #25D366; }
+  .ico.wa svg { width: 12px; height: 12px; fill: #fff; stroke: none; }
+  .ico.gm { background: #5AA9E6; }   /* botão do e-mail em azul claro */
+  .ico.gm svg { width: 11px; height: 11px; fill: #fff; stroke: none; }
+  .contact a:hover { color: var(--accent); text-decoration: underline; }
+
+  /* =========================================================
+     CORPO — duas colunas (principal + lateral)
+     ========================================================= */
+  .cv-body {
+    display: grid;
+    grid-template-columns: 1fr var(--side-w);
+    gap: var(--gap);
+    align-items: start;
+  }
+
+  /* Títulos de seção */
+  .cv h2 {
+    margin-bottom: 2mm; padding-bottom: 1mm;
+    border-bottom: 1px solid var(--line);
+    color: var(--navy);
+    font-size: 11pt; font-weight: 700;
+    letter-spacing: .08em; text-transform: uppercase;
+    break-after: avoid;
+  }
+  .block + .block { margin-top: 4mm; }
+
+  /* Experiências */
+  .job { break-inside: avoid; }
+  .job + .job { margin-top: 2.6mm; }
+  .job-head {
+    display: flex; justify-content: space-between; align-items: baseline;
+    gap: 8px; flex-wrap: wrap;
+  }
+  .job h3 { color: var(--navy); font-size: 9.8pt; font-weight: 700; }
+  .job h3 span { color: var(--text); font-weight: 600; }
+  .job time { color: var(--muted); font-size: 9pt; white-space: nowrap; }
+
+  .bullets { margin-top: .6mm; }
+  .bullets li { position: relative; padding-left: 12px; }
+  .bullets li + li { margin-top: .3mm; }
+  .bullets li::before {
+    content: ""; position: absolute; left: 2px; top: .58em;
+    width: 4px; height: 4px; background: var(--accent);
+  }
+
+  .summary { margin-top: 1.2mm; }
+
+  /* Coluna lateral */
+  .col-side {
+    padding: 4.5mm 4mm;
+    background: var(--side-bg);
+    font-size: 9.2pt;
+  }
+  .col-side .block { break-inside: avoid; }
+  .col-side h2 { border-bottom-color: #B7C9D6; font-size: 10pt; }
+  .edu strong { display: block; color: var(--navy); }
+  .edu span { display: block; color: var(--muted); }
+  .col-side .bullets li::before { background: var(--navy); }
+
+  /* =========================================================
+     CELULAR — coluna única
+     ========================================================= */
+  @media (max-width: 820px) {
+    .sheet {
+      width: auto; min-height: 0;
+      margin: 0 0 24px; padding: 24px 16px;
+      box-shadow: none;
+    }
+    .cv-body { grid-template-columns: 1fr; }
+    .cv-header h1 { font-size: 26px; }
+    .role { font-size: 13px; letter-spacing: .18em; }
+    .contact { flex-direction: column; }
+    .lang-nav .hint { display: none; }
+  }
+
+  /* =========================================================
+     IMPRESSÃO / PDF (Ctrl+P)
+     ========================================================= */
+  @page { size: A4; margin: 0; }
+  @media print {
+    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    body { background: #fff; }
+    .lang-nav, .lang-tag { display: none !important; }
+    .sheet {
+      width: 210mm; min-height: 297mm;
+      margin: 0; padding: var(--sheet-pad);
+      box-shadow: none;
+    }
+    .cv-body { grid-template-columns: 1fr var(--side-w); }
+    .contact { flex-direction: row; }
+  }
+</style>
+</head>
+<body>
+
+<!-- =========================================================
+     SELETOR DE IDIOMA COM BANDEIRAS
+     ========================================================= -->
+<nav class="lang-nav" aria-label="Idioma do currículo">
+  <a href="#pt" hreflang="pt-BR">
+    <svg class="flag" viewBox="0 0 20 14" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><rect width="20" height="14" fill="#009C3B"/><path d="M10 1.6 18.4 7 10 12.4 1.6 7z" fill="#FFDF00"/><circle cx="10" cy="7" r="3.3" fill="#002776"/><path d="M6.85 6Q10 5.6 13.1 8.15" stroke="#fff" stroke-width=".55" fill="none"/></svg>
+    <span>Português</span>
+  </a>
+  <a href="#en" hreflang="en">
+    <svg class="flag" viewBox="0 0 60 30" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><rect width="60" height="30" fill="#012169"/><path d="M0 0l60 30M60 0 0 30" stroke="#fff" stroke-width="6"/><path d="M0 0l60 30M60 0 0 30" stroke="#C8102E" stroke-width="2"/><path d="M30 0v30M0 15h60" stroke="#fff" stroke-width="10"/><path d="M30 0v30M0 15h60" stroke="#C8102E" stroke-width="6"/></svg>
+    <span>English</span>
+  </a>
+  <a href="#ru" hreflang="ru">
+    <svg class="flag" viewBox="0 0 9 6" preserveAspectRatio="none" aria-hidden="true"><rect width="9" height="2" fill="#fff"/><rect y="2" width="9" height="2" fill="#0039A6"/><rect y="4" width="9" height="2" fill="#D52B1E"/></svg>
+    <span lang="ru">Русский</span>
+  </a>
+  <a href="#zh" hreflang="zh-CN">
+    <svg class="flag" viewBox="0 0 30 20" aria-hidden="true"><rect width="30" height="20" fill="#EE1C25"/><g fill="#FFFF00"><polygon transform="translate(5 5) scale(3)" points="0,-1 .2245,-.309 .9511,-.309 .3633,.118 .5878,.809 0,.382 -.5878,.809 -.3633,.118 -.9511,-.309 -.2245,-.309"/><polygon transform="translate(10 2) rotate(-121)" points="0,-1 .2245,-.309 .9511,-.309 .3633,.118 .5878,.809 0,.382 -.5878,.809 -.3633,.118 -.9511,-.309 -.2245,-.309"/><polygon transform="translate(12 4) rotate(-98)" points="0,-1 .2245,-.309 .9511,-.309 .3633,.118 .5878,.809 0,.382 -.5878,.809 -.3633,.118 -.9511,-.309 -.2245,-.309"/><polygon transform="translate(12 7) rotate(-74)" points="0,-1 .2245,-.309 .9511,-.309 .3633,.118 .5878,.809 0,.382 -.5878,.809 -.3633,.118 -.9511,-.309 -.2245,-.309"/><polygon transform="translate(10 9) rotate(-51)" points="0,-1 .2245,-.309 .9511,-.309 .3633,.118 .5878,.809 0,.382 -.5878,.809 -.3633,.118 -.9511,-.309 -.2245,-.309"/></g></svg>
+    <span lang="zh-CN">中文</span>
+  </a>
+  <span class="hint">Ctrl+P para salvar em PDF</span>
+</nav>
+
+
+<!-- =========================================================
+     🇧🇷 PORTUGUÊS
+     ========================================================= -->
+<article class="cv" id="pt" lang="pt-BR">
+  <p class="lang-tag">
+    <svg class="flag" viewBox="0 0 20 14" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><rect width="20" height="14" fill="#009C3B"/><path d="M10 1.6 18.4 7 10 12.4 1.6 7z" fill="#FFDF00"/><circle cx="10" cy="7" r="3.3" fill="#002776"/><path d="M6.85 6Q10 5.6 13.1 8.15" stroke="#fff" stroke-width=".55" fill="none"/></svg>
+    Versão em português
+  </p>
+  <div class="sheet">
+
+    <!-- Cabeçalho -->
+    <header class="cv-header">
+      <h1>Gustavo Lacerda Lima</h1>
+      <p class="role">Assistente Administrativo</p>
+      <ul class="contact">
+        <li><span class="ico wa"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg></span><a href="https://wa.me/5547989172115?text=Ol%C3%A1%2C%20Gustavo!%20Vi%20seu%20curr%C3%ADculo%20para%20a%20vaga%20de%20Assistente%20Administrativo%20e%20gostaria%20de%20conversar." target="_blank" rel="noopener" title="Conversar no WhatsApp" aria-label="Conversar no WhatsApp: (47) 98917-2115">(47) 98917-2115</a></li>
+        <li><span class="ico gm"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z"/></svg></span><a href="mailto:gustallacerda@gmail.com?subject=Vaga%20de%20Assistente%20Administrativo%20%E2%80%93%20Gustavo%20Lacerda%20Lima&amp;body=Ol%C3%A1%2C%20Gustavo!%0D%0A%0D%0AVi%20seu%20curr%C3%ADculo%20para%20a%20vaga%20de%20Assistente%20Administrativo%20e%20gostaria%20de%20conversar%20com%20voc%C3%AA.%0D%0A%0D%0A" title="Enviar e-mail" aria-label="Enviar e-mail: gustallacerda@gmail.com">gustallacerda@gmail.com</a></li>
+        <li><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg></span>Santo André – SP</li>
+      </ul>
+    </header>
+
+    <div class="cv-body">
+      <!-- Coluna principal -->
+      <div class="col-main">
+        <section class="block">
+          <h2>Objetivo</h2>
+          <p>Atuar como Assistente Administrativo, contribuindo com organização, controle de documentos e atendimento de qualidade para apoiar as rotinas da empresa e crescer junto à organização.</p>
+          <p class="summary">Experiência em rotinas administrativas, gestão documental, atendimento ao público e apoio à logística, em empresas dos setores de saúde, tecnologia e comércio. Domínio do Pacote Office, cursando Análise e Desenvolvimento de Sistemas, com perfil organizado, proativo e atento a detalhes.</p>
+        </section>
+
+        <section class="block">
+          <h2>Experiência</h2>
+
+          <article class="job">
+            <div class="job-head"><h3>Cakto <span>· Analista de Suporte Júnior</span></h3><time>jun/2026 – ago/2026</time></div>
+            <ul class="bullets">
+              <li>Triagem, registro e resolução de chamados de clientes, com diagnóstico de problemas.</li>
+              <li>Orientação de usuários na utilização da plataforma.</li>
+              <li>Contribuição para a melhoria contínua dos processos de atendimento e da experiência do cliente.</li>
+            </ul>
+          </article>
+
+          <article class="job">
+            <div class="job-head"><h3>Unimed <span>· Recepcionista de Acesso Hospitalar</span></h3><time>dez/2025 – jun/2026</time></div>
+            <ul class="bullets">
+              <li>Recepção e atendimento humanizado de pacientes, visitantes e acompanhantes.</li>
+              <li>Cadastro e conferência de dados para liberação de acesso, seguindo protocolos de segurança e sigilo.</li>
+              <li>Orientação do fluxo de pessoas e informações sobre setores, horários e normas da instituição.</li>
+            </ul>
+          </article>
+
+          <article class="job">
+            <div class="job-head"><h3>Urbano Parts <span>· Auxiliar de Expedição</span></h3><time>nov/2024 – nov/2025</time></div>
+            <ul class="bullets">
+              <li>Emissão e conferência de notas fiscais.</li>
+              <li>Organização e controle de estoque; apoio à logística de entrada e saída de mercadorias.</li>
+              <li>Embalagem de produtos com eficiência, garantindo sua integridade.</li>
+            </ul>
+          </article>
+
+          <article class="job">
+            <div class="job-head"><h3>Mercadocar <span>· Operador de Serviços Automotivos</span></h3><time>ago/2024 – set/2024</time></div>
+            <ul class="bullets">
+              <li>Manutenção automotiva rápida seguindo padrões técnicos, de qualidade e de segurança.</li>
+            </ul>
+          </article>
+
+          <article class="job">
+            <div class="job-head"><h3>Faisa (Clasa) <span>· Jovem Aprendiz</span></h3><time>jan/2023 – abr/2024</time></div>
+            <ul class="bullets">
+              <li>Atualização de planilhas e organização de documentos físicos e digitais.</li>
+              <li>Atendimento telefônico e recepção presencial.</li>
+              <li>Elaboração de atas e suporte em reuniões.</li>
+              <li>Controle de arquivo e gestão documental.</li>
+            </ul>
+          </article>
+        </section>
+
+        <section class="block">
+          <h2>Comunicação</h2>
+          <p>Experiência em atendimento presencial, telefônico e digital, em ambiente de alto fluxo de pessoas (hospital) e no suporte a usuários de plataforma online. Comunicação clara e cordial, com sigilo no tratamento das informações.</p>
+        </section>
+
+        <section class="block">
+          <h2>Referências</h2>
+          <p>Disponíveis mediante solicitação.</p>
+        </section>
+      </div>
+
+      <!-- Coluna lateral -->
+      <aside class="col-side">
+        <section class="block edu">
+          <h2>Escolaridade</h2>
+          <strong>Análise e Desenvolvimento de Sistemas</strong>
+          <span>UNINTER · Cursando</span>
+        </section>
+
+        <section class="block">
+          <h2>Habilidades principais</h2>
+          <ul class="bullets">
+            <li>Rotinas administrativas</li>
+            <li>Gestão documental e arquivo</li>
+            <li>Planilhas e controle de dados</li>
+            <li>Emissão e conferência de notas fiscais</li>
+            <li>Controle de estoque</li>
+            <li>Elaboração de atas e apoio a reuniões</li>
+            <li>Recepção e atendimento telefônico</li>
+            <li>Cadastro e conferência de dados</li>
+          </ul>
+        </section>
+
+        <section class="block">
+          <h2>Ferramentas</h2>
+          <ul class="bullets">
+            <li>Pacote Office (domínio)</li>
+            <li>Sistemas de chamados / help desk</li>
+          </ul>
+        </section>
+
+        <section class="block">
+          <h2>Competências</h2>
+          <ul class="bullets">
+            <li>Boa comunicação</li>
+            <li>Trabalho em equipe</li>
+            <li>Proatividade</li>
+            <li>Organização</li>
+            <li>Atenção a detalhes</li>
+            <li>Comprometimento</li>
+            <li>Sigilo e ética</li>
+          </ul>
+        </section>
+      </aside>
+    </div>
+  </div>
+</article>
+
+
+<!-- =========================================================
+     🇬🇧 ENGLISH
+     ========================================================= -->
+<article class="cv" id="en" lang="en">
+  <p class="lang-tag">
+    <svg class="flag" viewBox="0 0 60 30" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><rect width="60" height="30" fill="#012169"/><path d="M0 0l60 30M60 0 0 30" stroke="#fff" stroke-width="6"/><path d="M0 0l60 30M60 0 0 30" stroke="#C8102E" stroke-width="2"/><path d="M30 0v30M0 15h60" stroke="#fff" stroke-width="10"/><path d="M30 0v30M0 15h60" stroke="#C8102E" stroke-width="6"/></svg>
+    English version
+  </p>
+  <div class="sheet">
+
+    <header class="cv-header">
+      <h1>Gustavo Lacerda Lima</h1>
+      <p class="role">Administrative Assistant</p>
+      <ul class="contact">
+        <li><span class="ico wa"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg></span><a href="https://wa.me/5547989172115?text=Hi%20Gustavo!%20I%20saw%20your%20resume%20for%20the%20Administrative%20Assistant%20position%20and%20would%20like%20to%20talk." target="_blank" rel="noopener" title="Chat on WhatsApp" aria-label="Chat on WhatsApp: +55 (47) 98917-2115">+55 (47) 98917-2115</a></li>
+        <li><span class="ico gm"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z"/></svg></span><a href="mailto:gustallacerda@gmail.com?subject=Administrative%20Assistant%20position%20%E2%80%93%20Gustavo%20Lacerda%20Lima&amp;body=Hi%20Gustavo%2C%0D%0A%0D%0AI%20saw%20your%20resume%20for%20the%20Administrative%20Assistant%20position%20and%20would%20like%20to%20talk%20with%20you.%0D%0A%0D%0A" title="Send an email" aria-label="Send an email: gustallacerda@gmail.com">gustallacerda@gmail.com</a></li>
+        <li><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg></span>Santo André – SP, Brazil</li>
+      </ul>
+    </header>
+
+    <div class="cv-body">
+      <div class="col-main">
+        <section class="block">
+          <h2>Objective</h2>
+          <p>To work as an Administrative Assistant, bringing organization, document control and quality service to support the company's daily routines and grow with the organization.</p>
+          <p class="summary">Hands-on experience in administrative routines, document management, customer service and logistics support, gained in the healthcare, technology and retail sectors. Proficient in Microsoft Office, currently pursuing a degree in Systems Analysis and Development, with an organized, proactive and detail-oriented profile.</p>
+        </section>
+
+        <section class="block">
+          <h2>Experience</h2>
+
+          <article class="job">
+            <div class="job-head"><h3>Cakto <span>· Junior Support Analyst</span></h3><time>Jun 2026 – Aug 2026</time></div>
+            <ul class="bullets">
+              <li>Triaged, logged and resolved customer tickets, diagnosing issues.</li>
+              <li>Guided users on how to use the platform.</li>
+              <li>Contributed to the continuous improvement of support processes and customer experience.</li>
+            </ul>
+          </article>
+
+          <article class="job">
+            <div class="job-head"><h3>Unimed <span>· Hospital Access Receptionist</span></h3><time>Dec 2025 – Jun 2026</time></div>
+            <ul class="bullets">
+              <li>Welcomed patients, visitors and companions with caring, respectful service.</li>
+              <li>Registered and verified personal data to grant access, following security and confidentiality protocols.</li>
+              <li>Directed visitor flow and provided information on departments, visiting hours and hospital policies.</li>
+            </ul>
+          </article>
+
+          <article class="job">
+            <div class="job-head"><h3>Urbano Parts <span>· Shipping Assistant</span></h3><time>Nov 2024 – Nov 2025</time></div>
+            <ul class="bullets">
+              <li>Issued and checked invoices (Brazilian <i>notas fiscais</i>).</li>
+              <li>Organized and controlled inventory; supported inbound and outbound logistics.</li>
+              <li>Packed products efficiently, ensuring their integrity.</li>
+            </ul>
+          </article>
+
+          <article class="job">
+            <div class="job-head"><h3>Mercadocar <span>· Automotive Service Operator</span></h3><time>Aug 2024 – Sep 2024</time></div>
+            <ul class="bullets">
+              <li>Performed quick automotive maintenance following technical, quality and safety standards.</li>
+            </ul>
+          </article>
+
+          <article class="job">
+            <div class="job-head"><h3>Faisa (Clasa) <span>· Apprentice (Young Apprentice Program)</span></h3><time>Jan 2023 – Apr 2024</time></div>
+            <ul class="bullets">
+              <li>Updated spreadsheets and organized physical and digital documents.</li>
+              <li>Handled phone calls and front-desk reception.</li>
+              <li>Drafted meeting minutes and provided meeting support.</li>
+              <li>Managed filing and document control.</li>
+            </ul>
+          </article>
+        </section>
+
+        <section class="block">
+          <h2>Communication</h2>
+          <p>Experience in in-person, phone and digital customer service, both in a high-traffic environment (hospital) and supporting users of an online platform. Clear, courteous communication with confidential handling of information.</p>
+        </section>
+
+        <section class="block">
+          <h2>References</h2>
+          <p>Available upon request.</p>
+        </section>
+      </div>
+
+      <aside class="col-side">
+        <section class="block edu">
+          <h2>Education</h2>
+          <strong>Systems Analysis and Development</strong>
+          <span>UNINTER · In progress</span>
+        </section>
+
+        <section class="block">
+          <h2>Key skills</h2>
+          <ul class="bullets">
+            <li>Administrative routines</li>
+            <li>Document management and filing</li>
+            <li>Spreadsheets and data control</li>
+            <li>Invoice issuing and checking</li>
+            <li>Inventory control</li>
+            <li>Meeting minutes and support</li>
+            <li>Front desk and phone service</li>
+            <li>Data entry and verification</li>
+          </ul>
+        </section>
+
+        <section class="block">
+          <h2>Tools</h2>
+          <ul class="bullets">
+            <li>Microsoft Office (proficient)</li>
+            <li>Ticketing / help desk systems</li>
+          </ul>
+        </section>
+
+        <section class="block">
+          <h2>Soft skills</h2>
+          <ul class="bullets">
+            <li>Communication</li>
+            <li>Teamwork</li>
+            <li>Proactivity</li>
+            <li>Organization</li>
+            <li>Attention to detail</li>
+            <li>Commitment</li>
+            <li>Confidentiality and ethics</li>
+          </ul>
+        </section>
+      </aside>
+    </div>
+  </div>
+</article>
+
+
+<!-- =========================================================
+     🇷🇺 РУССКИЙ
+     ========================================================= -->
+<article class="cv" id="ru" lang="ru">
+  <p class="lang-tag">
+    <svg class="flag" viewBox="0 0 9 6" preserveAspectRatio="none" aria-hidden="true"><rect width="9" height="2" fill="#fff"/><rect y="2" width="9" height="2" fill="#0039A6"/><rect y="4" width="9" height="2" fill="#D52B1E"/></svg>
+    Версия на русском языке
+  </p>
+  <div class="sheet">
+
+    <header class="cv-header">
+      <h1>Gustavo Lacerda Lima</h1>
+      <p class="role">Административный ассистент</p>
+      <ul class="contact">
+        <li><span class="ico wa"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg></span><a href="https://wa.me/5547989172115?text=%D0%97%D0%B4%D1%80%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D1%83%D0%B9%D1%82%D0%B5%2C%20%D0%93%D1%83%D1%81%D1%82%D0%B0%D0%B2%D0%BE!%20%D0%9C%D1%8B%20%D0%BE%D0%B7%D0%BD%D0%B0%D0%BA%D0%BE%D0%BC%D0%B8%D0%BB%D0%B8%D1%81%D1%8C%20%D1%81%20%D0%B2%D0%B0%D1%88%D0%B8%D0%BC%20%D1%80%D0%B5%D0%B7%D1%8E%D0%BC%D0%B5%20%D0%BD%D0%B0%20%D0%B2%D0%B0%D0%BA%D0%B0%D0%BD%D1%81%D0%B8%D1%8E%20%D0%B0%D0%B4%D0%BC%D0%B8%D0%BD%D0%B8%D1%81%D1%82%D1%80%D0%B0%D1%82%D0%B8%D0%B2%D0%BD%D0%BE%D0%B3%D0%BE%20%D0%B0%D1%81%D1%81%D0%B8%D1%81%D1%82%D0%B5%D0%BD%D1%82%D0%B0%20%D0%B8%20%D1%85%D0%BE%D1%82%D0%B5%D0%BB%D0%B8%20%D0%B1%D1%8B%20%D0%BE%D0%B1%D1%81%D1%83%D0%B4%D0%B8%D1%82%D1%8C." target="_blank" rel="noopener" title="Написать в WhatsApp" aria-label="Написать в WhatsApp: +55 (47) 98917-2115">+55 (47) 98917-2115</a></li>
+        <li><span class="ico gm"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z"/></svg></span><a href="mailto:gustallacerda@gmail.com?subject=%D0%92%D0%B0%D0%BA%D0%B0%D0%BD%D1%81%D0%B8%D1%8F%20%D0%B0%D0%B4%D0%BC%D0%B8%D0%BD%D0%B8%D1%81%D1%82%D1%80%D0%B0%D1%82%D0%B8%D0%B2%D0%BD%D0%BE%D0%B3%D0%BE%20%D0%B0%D1%81%D1%81%D0%B8%D1%81%D1%82%D0%B5%D0%BD%D1%82%D0%B0%20%E2%80%93%20Gustavo%20Lacerda%20Lima&amp;body=%D0%97%D0%B4%D1%80%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D1%83%D0%B9%D1%82%D0%B5%2C%20%D0%93%D1%83%D1%81%D1%82%D0%B0%D0%B2%D0%BE!%0D%0A%0D%0A%D0%9C%D1%8B%20%D0%BE%D0%B7%D0%BD%D0%B0%D0%BA%D0%BE%D0%BC%D0%B8%D0%BB%D0%B8%D1%81%D1%8C%20%D1%81%20%D0%B2%D0%B0%D1%88%D0%B8%D0%BC%20%D1%80%D0%B5%D0%B7%D1%8E%D0%BC%D0%B5%20%D0%BD%D0%B0%20%D0%B2%D0%B0%D0%BA%D0%B0%D0%BD%D1%81%D0%B8%D1%8E%20%D0%B0%D0%B4%D0%BC%D0%B8%D0%BD%D0%B8%D1%81%D1%82%D1%80%D0%B0%D1%82%D0%B8%D0%B2%D0%BD%D0%BE%D0%B3%D0%BE%20%D0%B0%D1%81%D1%81%D0%B8%D1%81%D1%82%D0%B5%D0%BD%D1%82%D0%B0%20%D0%B8%20%D1%85%D0%BE%D1%82%D0%B5%D0%BB%D0%B8%20%D0%B1%D1%8B%20%D0%BE%D0%B1%D1%81%D1%83%D0%B4%D0%B8%D1%82%D1%8C%20%D1%81%20%D0%B2%D0%B0%D0%BC%D0%B8%20%D0%B4%D0%B5%D1%82%D0%B0%D0%BB%D0%B8.%0D%0A%0D%0A" title="Написать письмо" aria-label="Написать письмо: gustallacerda@gmail.com">gustallacerda@gmail.com</a></li>
+        <li><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg></span>Санту-Андре – SP, Бразилия</li>
+      </ul>
+    </header>
+
+    <div class="cv-body">
+      <div class="col-main">
+        <section class="block">
+          <h2>Цель</h2>
+          <p>Должность административного ассистента: порядок в документации, качественное обслуживание и поддержка повседневной работы компании с возможностью профессионального роста.</p>
+          <p class="summary">Практический опыт административной работы, документооборота, обслуживания клиентов и поддержки логистики в сферах здравоохранения, технологий и торговли. Уверенный пользователь Microsoft Office, обучаюсь по направлению «Анализ и разработка систем». Организованный, инициативный, внимательный к деталям.</p>
+        </section>
+
+        <section class="block">
+          <h2>Опыт работы</h2>
+
+          <article class="job">
+            <div class="job-head"><h3>Cakto <span>· Младший специалист техподдержки</span></h3><time>июнь 2026 – август 2026</time></div>
+            <ul class="bullets">
+              <li>Сортировка, регистрация и решение обращений клиентов, диагностика проблем.</li>
+              <li>Консультирование пользователей по работе с платформой.</li>
+              <li>Участие в улучшении процессов поддержки и клиентского опыта.</li>
+            </ul>
+          </article>
+
+          <article class="job">
+            <div class="job-head"><h3>Unimed <span>· Администратор пропускного режима</span></h3><time>декабрь 2025 – июнь 2026</time></div>
+            <ul class="bullets">
+              <li>Приём пациентов, посетителей и сопровождающих с внимательным и уважительным отношением.</li>
+              <li>Регистрация и проверка данных для оформления допуска с соблюдением правил безопасности и конфиденциальности.</li>
+              <li>Организация потока посетителей, информирование об отделениях, часах работы и правилах учреждения.</li>
+            </ul>
+          </article>
+
+          <article class="job">
+            <div class="job-head"><h3>Urbano Parts <span>· Помощник по отгрузке</span></h3><time>ноябрь 2024 – ноябрь 2025</time></div>
+            <ul class="bullets">
+              <li>Оформление и проверка счетов-фактур (бразильские <i>notas fiscais</i>).</li>
+              <li>Организация и учёт складских запасов; поддержка логистики приёмки и отгрузки товаров.</li>
+              <li>Упаковка товаров с обеспечением их сохранности.</li>
+            </ul>
+          </article>
+
+          <article class="job">
+            <div class="job-head"><h3>Mercadocar <span>· Оператор автосервиса</span></h3><time>август 2024 – сентябрь 2024</time></div>
+            <ul class="bullets">
+              <li>Экспресс-обслуживание автомобилей по стандартам качества и безопасности, с ориентацией на клиента.</li>
+            </ul>
+          </article>
+
+          <article class="job">
+            <div class="job-head"><h3>Faisa (Clasa) <span>· Стажёр-ассистент</span></h3><time>январь 2023 – апрель 2024</time></div>
+            <ul class="bullets">
+              <li>Ведение электронных таблиц, систематизация бумажных и электронных документов.</li>
+              <li>Приём телефонных звонков и встреча посетителей.</li>
+              <li>Составление протоколов и поддержка совещаний.</li>
+              <li>Ведение архива и документооборота.</li>
+            </ul>
+          </article>
+        </section>
+
+        <section class="block">
+          <h2>Коммуникация</h2>
+          <p>Опыт очного, телефонного и онлайн-обслуживания: больница с большим потоком людей и поддержка пользователей онлайн-платформы. Чёткая, вежливая коммуникация и соблюдение конфиденциальности.</p>
+        </section>
+
+        <section class="block">
+          <h2>Рекомендации</h2>
+          <p>Предоставляются по запросу.</p>
+        </section>
+      </div>
+
+      <aside class="col-side">
+        <section class="block edu">
+          <h2>Образование</h2>
+          <strong>Анализ и разработка систем</strong>
+          <span>UNINTER · Обучение продолжается</span>
+        </section>
+
+        <section class="block">
+          <h2>Ключевые навыки</h2>
+          <ul class="bullets">
+            <li>Административная работа</li>
+            <li>Документооборот и архив</li>
+            <li>Таблицы и контроль данных</li>
+            <li>Оформление и проверка счетов</li>
+            <li>Учёт складских запасов</li>
+            <li>Протоколы и поддержка совещаний</li>
+            <li>Ресепшн и телефонные звонки</li>
+            <li>Ввод и проверка данных</li>
+          </ul>
+        </section>
+
+        <section class="block">
+          <h2>Инструменты</h2>
+          <ul class="bullets">
+            <li>Microsoft Office (уверенный пользователь)</li>
+            <li>Системы обработки заявок (help desk)</li>
+          </ul>
+        </section>
+
+        <section class="block">
+          <h2>Личные качества</h2>
+          <ul class="bullets">
+            <li>Коммуникабельность</li>
+            <li>Работа в команде</li>
+            <li>Инициативность</li>
+            <li>Организованность</li>
+            <li>Внимание к деталям</li>
+            <li>Ответственность</li>
+            <li>Конфиденциальность и этика</li>
+          </ul>
+        </section>
+      </aside>
+    </div>
+  </div>
+</article>
+
+
+<!-- =========================================================
+     🇨🇳 中文（简体）
+     ========================================================= -->
+<article class="cv" id="zh" lang="zh-CN">
+  <p class="lang-tag">
+    <svg class="flag" viewBox="0 0 30 20" aria-hidden="true"><rect width="30" height="20" fill="#EE1C25"/><g fill="#FFFF00"><polygon transform="translate(5 5) scale(3)" points="0,-1 .2245,-.309 .9511,-.309 .3633,.118 .5878,.809 0,.382 -.5878,.809 -.3633,.118 -.9511,-.309 -.2245,-.309"/><polygon transform="translate(10 2) rotate(-121)" points="0,-1 .2245,-.309 .9511,-.309 .3633,.118 .5878,.809 0,.382 -.5878,.809 -.3633,.118 -.9511,-.309 -.2245,-.309"/><polygon transform="translate(12 4) rotate(-98)" points="0,-1 .2245,-.309 .9511,-.309 .3633,.118 .5878,.809 0,.382 -.5878,.809 -.3633,.118 -.9511,-.309 -.2245,-.309"/><polygon transform="translate(12 7) rotate(-74)" points="0,-1 .2245,-.309 .9511,-.309 .3633,.118 .5878,.809 0,.382 -.5878,.809 -.3633,.118 -.9511,-.309 -.2245,-.309"/><polygon transform="translate(10 9) rotate(-51)" points="0,-1 .2245,-.309 .9511,-.309 .3633,.118 .5878,.809 0,.382 -.5878,.809 -.3633,.118 -.9511,-.309 -.2245,-.309"/></g></svg>
+    中文版本
+  </p>
+  <div class="sheet">
+
+    <header class="cv-header">
+      <h1>Gustavo Lacerda Lima</h1>
+      <p class="role">行政助理</p>
+      <ul class="contact">
+        <li><span class="ico wa"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg></span><a href="https://wa.me/5547989172115?text=%E6%82%A8%E5%A5%BD%EF%BC%8CGustavo%EF%BC%81%E6%88%91%E7%9C%8B%E5%88%B0%E4%BA%86%E6%82%A8%E5%BA%94%E8%81%98%E8%A1%8C%E6%94%BF%E5%8A%A9%E7%90%86%E8%81%8C%E4%BD%8D%E7%9A%84%E7%AE%80%E5%8E%86%EF%BC%8C%E6%83%B3%E5%92%8C%E6%82%A8%E8%81%8A%E4%B8%80%E8%81%8A%E3%80%82" target="_blank" rel="noopener" title="通过 WhatsApp 联系" aria-label="通过 WhatsApp 联系: +55 (47) 98917-2115">+55 (47) 98917-2115</a></li>
+        <li><span class="ico gm"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z"/></svg></span><a href="mailto:gustallacerda@gmail.com?subject=%E8%A1%8C%E6%94%BF%E5%8A%A9%E7%90%86%E8%81%8C%E4%BD%8D%20%E2%80%93%20Gustavo%20Lacerda%20Lima&amp;body=%E6%82%A8%E5%A5%BD%EF%BC%8CGustavo%EF%BC%81%0D%0A%0D%0A%E6%88%91%E7%9C%8B%E5%88%B0%E4%BA%86%E6%82%A8%E5%BA%94%E8%81%98%E8%A1%8C%E6%94%BF%E5%8A%A9%E7%90%86%E8%81%8C%E4%BD%8D%E7%9A%84%E7%AE%80%E5%8E%86%EF%BC%8C%E6%83%B3%E5%92%8C%E6%82%A8%E8%BF%9B%E4%B8%80%E6%AD%A5%E6%B2%9F%E9%80%9A%E3%80%82%0D%0A%0D%0A" title="发送电子邮件" aria-label="发送电子邮件: gustallacerda@gmail.com">gustallacerda@gmail.com</a></li>
+        <li><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg></span>巴西 圣保罗州 圣安德烈</li>
+      </ul>
+    </header>
+
+    <div class="cv-body">
+      <div class="col-main">
+        <section class="block">
+          <h2>求职目标</h2>
+          <p>应聘行政助理职位，以条理性、文件管理能力和优质服务高效支持公司日常运营，并与公司共同成长。</p>
+          <p class="summary">具备行政事务、文件管理、客户服务及物流支持等实践经验，曾任职于医疗、科技和商贸行业。熟练使用 Microsoft Office，目前在读系统分析与开发专业。做事有条理、积极主动、注重细节。</p>
+        </section>
+
+        <section class="block">
+          <h2>工作经历</h2>
+
+          <article class="job">
+            <div class="job-head"><h3>Cakto <span>· 初级技术支持分析员</span></h3><time>2026年6月 – 2026年8月</time></div>
+            <ul class="bullets">
+              <li>对客户工单进行分类、登记和处理，诊断问题。</li>
+              <li>指导用户使用平台。</li>
+              <li>参与持续改进支持流程和客户体验。</li>
+            </ul>
+          </article>
+
+          <article class="job">
+            <div class="job-head"><h3>Unimed <span>· 医院出入接待员</span></h3><time>2025年12月 – 2026年6月</time></div>
+            <ul class="bullets">
+              <li>接待患者、访客及陪同人员，提供人性化、尊重的服务。</li>
+              <li>登记并核对信息以办理出入许可，遵守安全与保密规定。</li>
+              <li>引导人员流动，提供科室、时间安排及院内规章等信息。</li>
+            </ul>
+          </article>
+
+          <article class="job">
+            <div class="job-head"><h3>Urbano Parts <span>· 发货助理</span></h3><time>2024年11月 – 2025年11月</time></div>
+            <ul class="bullets">
+              <li>开具并核对发票（巴西 <i>notas fiscais</i>）。</li>
+              <li>整理和管理库存；支持货物出入库物流。</li>
+              <li>高效包装产品，确保产品完好。</li>
+            </ul>
+          </article>
+
+          <article class="job">
+            <div class="job-head"><h3>Mercadocar <span>· 汽车服务操作员</span></h3><time>2024年8月 – 2024年9月</time></div>
+            <ul class="bullets">
+              <li>按照技术、质量和安全标准提供汽车快修保养服务，注重客户满意度。</li>
+            </ul>
+          </article>
+
+          <article class="job">
+            <div class="job-head"><h3>Faisa (Clasa) <span>· 青年学徒</span></h3><time>2023年1月 – 2024年4月</time></div>
+            <ul class="bullets">
+              <li>更新电子表格，整理纸质和电子文件。</li>
+              <li>接听电话及前台接待。</li>
+              <li>撰写会议纪要并提供会议支持。</li>
+              <li>档案管理和文件控制。</li>
+            </ul>
+          </article>
+        </section>
+
+        <section class="block">
+          <h2>沟通能力</h2>
+          <p>具有面对面、电话及线上客户服务经验，曾在人流量大的环境（医院）工作，并为在线平台用户提供支持。沟通清晰、礼貌，严格保守信息机密。</p>
+        </section>
+
+        <section class="block">
+          <h2>推荐人</h2>
+          <p>可应要求提供。</p>
+        </section>
+      </div>
+
+      <aside class="col-side">
+        <section class="block edu">
+          <h2>教育背景</h2>
+          <strong>系统分析与开发</strong>
+          <span>UNINTER · 在读</span>
+        </section>
+
+        <section class="block">
+          <h2>核心技能</h2>
+          <ul class="bullets">
+            <li>行政事务处理</li>
+            <li>文件管理与归档</li>
+            <li>电子表格与数据管理</li>
+            <li>发票开具与核对</li>
+            <li>库存管理</li>
+            <li>会议纪要与会议支持</li>
+            <li>前台接待与电话接听</li>
+            <li>信息录入与核对</li>
+          </ul>
+        </section>
+
+        <section class="block">
+          <h2>工具</h2>
+          <ul class="bullets">
+            <li>Microsoft Office（熟练）</li>
+            <li>工单 / 服务台系统</li>
+          </ul>
+        </section>
+
+        <section class="block">
+          <h2>个人素质</h2>
+          <ul class="bullets">
+            <li>沟通能力强</li>
+            <li>团队合作</li>
+            <li>积极主动</li>
+            <li>条理清晰</li>
+            <li>注重细节</li>
+            <li>责任心强</li>
+            <li>保密意识与职业道德</li>
+          </ul>
+        </section>
+      </aside>
+    </div>
+  </div>
+</article>
+
+</body>
+</html>
